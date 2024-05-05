@@ -1,6 +1,15 @@
 # Hotel Recommendation System
 
-This repository contains code for a hotel recommendation system. Follow the steps below to set up and run the system.
+This repository contains code for a hotel recommendation system. The system utilizes content-based filtering and collaborative filtering techniques on a hotel rating dataset to recommend hotels to users. Below are the steps to set up and run the system.
+
+## Description
+
+This project creates a hotel recommendation engine using content-based filtering and collaborative filtering techniques on a hotel rating dataset. It involves the following steps:
+
+- **Feature Engineering**: Preprocessing the hotel ratings dataset to extract relevant features for recommendation.
+- **User Profile Creation**: Generating user profiles from the hotel data to understand user preferences.
+- **Model Training**: Training the recommendation models on train and test splits of the dataset.
+- **Model Serialization**: Saving the trained models as joblib files for fast inference during recommendation.
 
 ## Installation
 
