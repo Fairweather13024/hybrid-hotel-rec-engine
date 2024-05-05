@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Input Form</title>
+  </head>
+  <body>
+    <form id="inputForm">
+      <label for="name">Enter hotel name:</label><br />
+      <input type="text" id="name" name="name" /><br />
+      <label for="user_uuid">Enter your UUID:</label><br />
+      <input type="text" id="user_uuid" name="user_uuid" /><br />
+      <input type="submit" value="Submit" />
+    </form>
+    <br />
+    <br />
+    <h3>Content Based Results</h3>
+    <div id="contentBasedContainer"></div>
+    <h3>Collaborative Filtering Results</h3>
+    <br />
+    <br />
+    <div id="collaborativeFilteringContainer"></div>
+
+    <script>
+      document
+        .getElementById("inputForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent the form from submitting normally
+
+          // Get the value of the name and user_uuid input fields
+          var name = document.getElementById("name").value;
+          var user_uuid = document.getElementById("user_uuid").value;
+          console.log("Name:", name);
+          console.log("User UUID:", user_uuid);
+
+          // Send a POST request to CORS Anywhere proxy with the name and user_uuid
+          fetch("http://localhost:8000", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ hotelName: name, userUUID: user_uuid }), // Include user_uuid in the body
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              return response.json();
+            })
+            .then((data) => {
+              console.log("Response received:", data);
+
+              // Display response in the HTML for content_based_results
+              var contentBasedContainer = document.getElementById(
+                "contentBasedContainer"
+              );
+              renderHotels(
+                data.content_based_results,
+                contentBasedContainer,
+                
+              );
+
+              // Display response in the HTML for collaborative_filtering_results
+              var collaborativeFilteringContainer = document.getElementById(
+                "collaborativeFilteringContainer"
+              );
+              renderHotels(
+                data.collaborative_filtering_results,
+                collaborativeFilteringContainer,
+                
+              );
+            })
+            .catch((error) => {
+              console.error(
+                "There was a problem with the fetch operation:",
+                error
+              );
+              alert("Failed to retrieve hotel data. Please try again later.");
+            });
+        });
+
+      function renderHotels(hotels, container, ) {
+        container.innerHTML = ""; 
+
+
+        hotels.forEach(function (hotel) {
+          var paragraph = document.createElement("p");
+          paragraph.textContent = `Hotel Name: ${hotel.hotel_name}, Rating: ${
+            hotel.rating
+          }, Neighborhood: ${hotel.neighborhood}, City: ${
+            hotel.city || "Unknown"
+          }`;
+          container.appendChild(paragraph);
+        });
+      }
+    </script>
+  </body>
+</html>
